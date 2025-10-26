@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prova New - Simulado Interativo</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root {
+        --primary: #004F59;
+        --primary-light: #007A89;
+        --secondary: #00FF87;
+        --accent: #FF6B6B;
+        --light: #F6F6F6;
+        --dark: #333;
+        --success: #28a745;
+        --danger: #dc3545;
+        --warning: #ffc107;
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+    }
+    
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        color: var(--dark);
+        line-height: 1.6;
+    }
+    
+    .container {
+        background: var(--light);
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: var(--card-shadow);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+    
+    h1 {
+        text-align: center;
+        color: var(--primary);
+        margin-bottom: 30px;
+        font-weight: 700;
+        font-size: 2.2rem;
+        position: relative;
+        padding-bottom: 15px;
+    }
+    
+    h1::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: var(--secondary);
+        border-radius: 2px;
+    }
+    
+    .question {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: var(--transition);
+        border-left: 8px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .question:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .question::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        opacity: 0;
+        transition: var(--transition);
+    }
+    
+    .question:hover::before {
+        opacity: 1;
+    }
+    
+    .question h3 {
+        margin-top: 0;
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .question h3::before {
+        content: 'Q';
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        background: var(--primary);
+        color: white;
+        border-radius: 50%;
+        margin-right: 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .options-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    label {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        margin: 4px 0;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: var(--transition);
+        background: rgba(0, 79, 89, 0.03);
+        border: 1px solid transparent;
+    }
+    
+    label:hover {
+        background: rgba(0, 79, 89, 0.08);
+        transform: translateX(5px);
+    }
+    
+    input[type="radio"], input[type="checkbox"] {
+        margin-right: 12px;
+        transform: scale(1.2);
+        accent-color: var(--primary);
+    }
+    
+    .actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+    
+    button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 10px rgba(0, 79, 89, 0.2);
+    }
+    
+    button:hover {
+        background: var(--primary-light);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 79, 89, 0.3);
+    }
+    
+    button.reset {
+        background: #6c757d;
+    }
+    
+    button.reset:hover {
+        background: #5a6268;
+    }
+    
+    .result {
+        text-align: left;
+        margin-top: 40px;
+        padding: 25px;
+        background: #E6FFFA;
+        border-radius: 16px;
+        font-size: 18px;
+        display: none;
+        border-left: 6px solid var(--success);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .correct { 
+        color: var(--success); 
+        font-weight: bold; 
+    }
+    
+    .incorrect { 
+        color: var(--danger); 
+        font-weight: bold; 
+    }
+    
+    .summary-list { 
+        margin-top: 15px; 
+    }
+    
+    .summary-list li { 
+        margin: 10px 0; 
+        padding: 10px;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .small { 
+        font-size: 14px; 
+        color: #666; 
+        margin-top: 8px; 
+    }
+    
+    .score-display {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 15px 0;
+        text-align: center;
+    }
+    
+    .progress-bar {
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        margin: 20px 0;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 4px;
+        transition: width 0.5s ease;
+    }
+    
+    @media (max-width: 768px) {
+        .container { 
+            padding: 25px; 
+            margin: 10px; 
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+        }
+        
+        .question {
+            padding: 20px;
+        }
+        
+        .actions {
+            flex-direction: column;
+        }
+        
+        button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .container { 
+            padding: 20px; 
+        }
+        
+        h1 {
+            font-size: 1.6rem;
+        }
+        
+        .question h3 {
+            font-size: 1.1rem;
+        }
+    }
+    
+    /* Animações */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .question {
+        animation: fadeIn 0.5s ease forwards;
+    }
+    
+    .question:nth-child(odd) {
+        animation-delay: 0.1s;
+    }
+    
+    .question:nth-child(even) {
+        animation-delay: 0.2s;
+    }
+    
+</style>
+</head>
+<body>
+<div class="container">
+    <h1><i class="fas fa-file-alt"></i>Simulado</h1>
+    
+    <form id="quizForm">
+        <div class="question" data-answer="B">
+            <h3>1. O programa exibe o menu com as opções disponíveis para o usuário. Qual comando é responsável por imprimir essas linhas?</h3>
+            <div class="options-container">
+                <label><input type="radio" name="q1" value="A">A) input</label>
+                <label><input type="radio" name="q1" value="B">B) print</label>
+                <label><input type="radio" name="q1" value="C">C) for</label>
+                <label><input type="radio" name="q1" value="D">D) if</label>
+            </div>
+        </div>
+
+        <div class="question" data-answer="B">
+            <h3>2. O que acontece se o usuário digitar credenciais inválidas ao iniciar o programa?</h3>
+            <div class="options-container">
+                <label><input type="radio" name="q2" value="A">A) Solicita novamente indefinidamente.</label>
+                <label><input type="radio" name="q2" value="B">B) Exibe "Credenciais inválidas" e encerra.</label>
+                <label><input type="radio" name="q2" value="C">C) Permite entrar mesmo assim.</label>
+                <label><input type="radio" name="q2" value="D">D) Pede apenas a senha novamente.</label>
+            </div>
+        </div>
+
+        <div class="question" data-answer="C">
+            <h3>3. Ao escolher "Repor estoque", o que acontece com a variável <code>caixa</code>?</h3>
+            <div class="options-container">
+                <label><input type="radio" name="q3" value="A">A) Aumenta.</label>
+                <label><input type="radio" name="q3" value="B">B) Diminui.</label>
+                <label><input type="radio" name="q3" value="C">C) Não é alterada.</label>
+                <label><input type="radio" name="q3" value="D">D) É zerada.</label>
+            </div>
+        </div>
+
+        <div class="question" data-answer="BCD" data-multi="true">
+            <h3>4. Quais variáveis armazenam o estado financeiro/operacional do sistema? (marque todas as corretas)</h3>
+            <div class="options-container">
+                <label><input type="checkbox" name="q4" value="A">A) produtos</label>
+                <label><input type="checkbox" name="q4" value="B">B) extrato</label>
+                <label><input type="checkbox" name="q4" value="C">C) caixa</label>
+                <label><input type="checkbox" name="q4" value="D">D) id_op</label>
+            </div>
+        </div>
+
+        <div class="question" data-answer="AC" data-multi="true">
+            <h3>5. Se adicionarmos o campo "ultima_operacao", onde seria melhor atualizá-lo? (marque todas as corretas)</h3>
+            <div class="options-container">
+                <label><input type="checkbox" name="q5" value="A">A) No final do bloco de venda.</label>
+                <label><input type="checkbox" name="q5" value="B">B) Antes do login.</label>
+                <label><input type="checkbox" name="q5" value="C">C) No final do bloco de reposição.</label>
+                <label><input type="checkbox" name="q5" value="D">D) Fora do loop principal.</label>
+            </div>
+        </div>
+
+        <div class="question" data-answer="A">
+            <h3>6. Onde inserir a verificação de limite de vendas por transação?</h3>
+            <div class="options-container">
+                <label><input type="radio" name="q6" value="A">A) Dentro do bloco da opção 2, logo após ler a quantidade.</label>
+                <label><input type="radio" name="q6" value="B">B) Antes do login.</label>
+                <label><input type="radio" name="q6" value="C">C) No bloco da opção 3.</label>
+                <label><input type="radio" name="q6" value="D">D) No final do programa.</label>
+            </div>
+        </div>
+
+        <div class="question" data-answer="B">
+            <h3>7. Se o usuário digitar uma quantidade negativa em uma venda, o que acontece?</h3>
+            <div class="options-container">
+                <label><input type="radio" name="q7" value="A">A) O estoque aumenta.</label>
+                <label><input type="radio" name="q7" value="B">B) O programa rejeita a operação.</label>
+                <label><input type="radio" name="q7" value="C">C) Lança exceção e encerra.</label>
+                <label><input type="radio" name="q7" value="D">D) Registra normalmente.</label>
+            </div>
+        </div>
+
+        <div class="question" data-answer="B">
+            <h3>8. Qual é o formato de cada item em <code>extrato</code> quando ocorre uma venda?</h3>
+            <div class="options-container">
+                <label><input type="radio" name="q8" value="A">A) Tupla (id, tipo, itens, total)</label>
+                <label><input type="radio" name="q8" value="B">B) Dicionário {"id": ..., "tipo": ..., "itens": [...], "total": ...}</label>
+                <label><input type="radio" name="q8" value="C">C) Lista [id, tipo, itens, total]</label>
+                <label><input type="radio" name="q8" value="D">D) Apenas o valor numérico do total</label>
+            </div>
+        </div>
+
+        <div class="question" data-answer="B">
+            <h3>9. O que acontece com a variável <code>id_op</code> em operações consecutivas?</h3>
+            <div class="options-container">
+                <label><input type="radio" name="q9" value="A">A) Sempre 0.</label>
+                <label><input type="radio" name="q9" value="B">B) Incrementa a cada operação.</label>
+                <label><input type="radio" name="q9" value="C">C) Volta a 0 a cada venda.</label>
+                <label><input type="radio" name="q9" value="D">D) É sobrescrita com o código do produto.</label>
+            </div>
+        </div>
+
+        <div class="question" data-answer="D">
+            <h3>10. Se trocarmos as legendas das opções 2 e 3 (apenas os textos), o comportamento do programa muda?</h3>
+            <div class="options-container">
+                <label><input type="radio" name="q10" value="A">A) Sempre correto.</label>
+                <label><input type="radio" name="q10" value="B">B) Sempre incorreto.</label>
+                <label><input type="radio" name="q10" value="C">C) Depende de onde forem feitas as trocas.</label>
+                <label><input type="radio" name="q10" value="D">D) Correto apenas se trocarmos também os números das opções.</label>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button type="button" onclick="corrigir()"><i class="fas fa-check-circle"></i> Ver resultado</button>
+            <button type="button" onclick="resetar()" class="reset"><i class="fas fa-redo"></i> Limpar respostas</button>
+        </div>
+    </form>
+
+    <div class="result" id="resultado"></div>
+    </form>
+</div>
+
+<script>
+function corrigir() {
+    const perguntas = document.querySelectorAll('.question');
+    let acertos = 0;
+    let detalhes = [];
+    
+    perguntas.forEach((q, idx) => {
+        const index = idx + 1;
+        const correta = q.dataset.answer;
+        const multi = q.dataset.multi === "true";
+        let marcado = [];
+
+        if (multi) {
+            q.querySelectorAll('input[type=checkbox]:checked').forEach(c => marcado.push(c.value));
+            marcado.sort();
+            const corretaArr = correta.split('').sort().join('');
+            const marcadoJoin = marcado.join('');
+            if (marcadoJoin === corretaArr) {
+                acertos++;
+                q.style.borderLeft = "8px solid var(--success)";
+                detalhes.push({q: index, ok: true});
+            } else {
+                q.style.borderLeft = "8px solid var(--danger)";
+                detalhes.push({q: index, ok: false, correta: correta, marcada: marcadoJoin || '(nenhuma)'});
+            }
+        } else {
+            const sel = q.querySelector('input[type=radio]:checked');
+            const marcadoVal = sel ? sel.value : null;
+            if (marcadoVal && marcadoVal === correta) {
+                acertos++;
+                q.style.borderLeft = "8px solid var(--success)";
+                detalhes.push({q: index, ok: true});
+            } else {
+                q.style.borderLeft = "8px solid var(--danger)";
+                detalhes.push({q: index, ok: false, correta: correta, marcada: marcadoVal || '(nenhuma)'});
+            }
+        }
+    });
+
+    const nota = (acertos / 10 * 10).toFixed(1);
+    const res = document.getElementById('resultado');
+    res.style.display = "block";
+
+    // Monta lista de detalhes
+    let lista = '<ul class="summary-list">';
+    detalhes.forEach(d => {
+        if (d.ok) {
+            lista += `<li>Questão ${d.q}: <span class="correct"><i class="fas fa-check"></i> Correta</span></li>`;
+        } else {
+            lista += `<li>Questão ${d.q}: <span class="incorrect"><i class="fas fa-times"></i> Incorreta</span> — sua resposta: <strong>${d.marcada}</strong>; resposta certa: <strong>${d.correta}</strong></li>`;
+        }
+    });
+    lista += '</ul>';
+
+    // Barra de progresso
+    const progresso = (acertos / 10) * 100;
+    
+    res.innerHTML = `
+        <div class="score-display" style="color: ${nota>=7?'var(--success)':'var(--danger)'}">${nota}/10</div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progresso}%"></div>
+        </div>
+        <strong>Você acertou ${acertos} de 10 questões.</strong>
+        <div class="small">(Sem a pergunta bônus de 2 pontos)</div>
+        ${lista}
+    `;
+
+    window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+}
+
+function resetar(){
+    document.getElementById('quizForm').reset();
+    document.getElementById('resultado').style.display = 'none';
+    document.querySelectorAll('.question').forEach(q => q.style.borderLeft = '8px solid transparent');
+}
+
+</script>
+</body>
+</html>
